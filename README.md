@@ -14,7 +14,7 @@ repositories {
 
 Gradle:
 ```Java
-compile 'com.devkito.log4a:log4a:1.0.0'
+compile 'com.devkito.log4a:log4a:1.1.0'
 ```
 
 ## License
