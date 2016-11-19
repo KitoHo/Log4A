@@ -44,5 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         Sys.logW("OnCreate");
         //Sys.logW("OnCreate", new NumberFormatException());
+
+        Sys.logStackTrace();
+
+        Sys.log(null);
     }
 }

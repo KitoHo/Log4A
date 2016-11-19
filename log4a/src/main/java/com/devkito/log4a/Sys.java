@@ -47,9 +47,15 @@ public class Sys {
     }
 
     public final static int log(Object obj) {
+        return Sys.log(Sys.tag(), obj);
+    }
+
+    public final static int log(String tag, Object obj) {
         String msg;
 
-        if (obj instanceof JSONObject) {
+        if (obj == null) {
+            msg = "null";
+        } else if (obj instanceof JSONObject) {
             try {
                 msg = ((JSONObject) obj).toString(2);
             } catch (JSONException e) {
@@ -70,19 +76,19 @@ public class Sys {
 
         switch (Sys._lv) {
             case Verbose:
-                return Log.v(Sys.tag(), msg);
+                return Log.v(tag, msg);
 
             case Debug:
-                return Log.d(Sys.tag(), msg);
+                return Log.d(tag, msg);
 
             case Info:
-                return Log.i(Sys.tag(), msg);
+                return Log.i(tag, msg);
 
             case Warn:
-                return Log.w(Sys.tag(), msg);
+                return Log.w(tag, msg);
 
             case Error:
-                return Log.e(Sys.tag(), msg);
+                return Log.e(tag, msg);
 
             default:
                 return 0;
@@ -90,8 +96,12 @@ public class Sys {
     }
 
     private final static String tag() {
+        return Sys.tag(1);
+    }
+
+    private final static String tag(int adjust) {
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-        String tag = stack[Sys.STACK_IDX].toString();
+        String tag = stack[Sys.STACK_IDX + adjust].toString();
         if (Sys._mode == MODE.Detail) {
             String[] split = tag.split("\\.");
             return "[" + split[split.length - 3] + "." + split[split.length - 2] + "." + split[split.length - 1] + "]";
@@ -179,5 +189,19 @@ public class Sys {
         } else {
             return 0;
         }
+    }
+
+    public final static String stackTrace() {
+        StringBuilder sb = new StringBuilder();
+        StackTraceElement[] stacks = Thread.currentThread().getStackTrace();
+        sb.append(stacks[0].toString() + "\n");
+        for (int i = Sys.STACK_IDX; i < stacks.length; i++) {
+            sb.append(stacks[i].toString() + "\n");
+        }
+        return sb.toString();
+    }
+
+    public final static int logStackTrace() {
+        return Sys.log(Sys.tag(), Sys.stackTrace());
     }
 }
